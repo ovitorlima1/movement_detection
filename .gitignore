@@ -3,3 +3,5 @@ venv
 *.mp4
 *.log
 *.mkv
+*.csv
+

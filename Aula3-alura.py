@@ -4,7 +4,14 @@ import sys
 VIDEO_PATH = r"C:\Users\vitor.matheus\Music\GIT - Pessoal\movement_detection\channel1_20250.mp4"
 
 algorithm_types = ['KNN', 'GMG', 'CNT', 'MOG', 'MOG2']
-algorithm_type = algorithm_types[0]
+algorithm_type = algorithm_types[4]
+
+## KNN = Tempo de execução:  14.332573
+## GMG = Tempo de execução:  14.6685902
+## CNT = Tempo de execução:  14.155815
+## MOG = Tempo de execução:  14.2354167
+## MOG2 = Tempo de execução: 14.2768369
+
 
 def substractor(algorithm_type):
 
