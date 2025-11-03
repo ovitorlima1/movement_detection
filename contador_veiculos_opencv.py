@@ -44,23 +44,31 @@ print(Kernel('closing'))
 def substractor(algorithm_type):
 
     if algorithm_type == 'KNN':
-        return cv2.createBackgroundSubtractorKNN()
+        return cv2.createBackgroundSubtractorKNN(initializationFrames= 120,
+                                                 decisionThreshold=0.8)
     if algorithm_type == 'GMG':
-        return cv2.bgsegm.createBackgroundSubtractorGMG()
+        return cv2.bgsegm.createBackgroundSubtractorGMG(history=100, mixtures=5,
+                                                        backgroundRatio=0.7,
+                                                        noiseSigma=0)
     if algorithm_type == 'CNT':
-        return cv2.bgsegm.createBackgroundSubtractorCNT()
+        return cv2.bgsegm.createBackgroundSubtractorCNT(history=100, detectShadows=True,
+                                                        varThreshold=100)
     if algorithm_type == 'MOG':
-        return cv2.bgsegm.createBackgroundSubtractorMOG()
+        return cv2.bgsegm.createBackgroundSubtractorMOG(history=500, dist2Threshold=400,
+                                                        detecShadows=True)
     if algorithm_type == 'MOG2':
-        return cv2.createBackgroundSubtractorMOG2()
+        return cv2.createBackgroundSubtractorMOG2(minPixelStability=15,
+                                                  useHistory=True,
+                                                  maxPixelStability=15*60,
+                                                  isParallel=True)
     
     print("ERRO - Insira uma nova informação")
     sys.exit(1)
 
-w_min = 30 # Largura minima do retângulo
-h_min = 30 # Altura minima do retângulo
-offset = 10 # Erro permitido entre o centro do objeto e a linha
-linha_roi = 500 # Posição da linha de contagem
+w_min = 50 # Largura minima do retângulo
+h_min = 50 # Altura minima do retângulo
+offset = 3 # Erro permitido entre o centro do objeto e a linha
+linha_roi = 250 # Posição da linha de contagem
 carros = 0
 
 def centroide(x, y, w, h):
@@ -83,7 +91,7 @@ def set_info(detec):
     for (x, y) in detec:
         if (linha_roi + offset) > y > (linha_roi - offset):
             carros += 1
-            cv2.line(frame, (25, linha_roi), (1200, linha_roi), (0, 127, 255), 3)
+            cv2.line(frame, (25, linha_roi), (300, linha_roi), (0, 127, 255), 3)
             detec.remove((x, y))
             print("Carros detectados até o momento: " + str(carros))
 
@@ -108,12 +116,12 @@ while True:
     frame = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)    
 
     mask = background_substractor.apply(frame)
-    mask = Filter(mask, 'closing') 
+    mask = Filter(mask, 'combine') 
     #car_after_mask = cv2.bitwise_and(frame, frame, mask=mask)
 
 
     contorno, img = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    cv2.line(frame, (25, linha_roi), (1200, linha_roi), (255, 127, 0), 3)
+    cv2.line(frame, (25, linha_roi), (300, linha_roi), (255, 127, 0), 3)
     for (i, c) in enumerate(contorno):
         (x, y, w, h) = cv2.boundingRect(c)
         validar_contorno = (w >= w_min) and (h >= h_min)
