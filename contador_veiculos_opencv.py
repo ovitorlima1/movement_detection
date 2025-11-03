@@ -41,29 +41,28 @@ print(Kernel('opening'))
 print("Dilation Kernel: ")
 print(Kernel('closing'))
 
-def substractor(algorithm_type):
-
-    if algorithm_type == 'KNN':
-        return cv2.createBackgroundSubtractorKNN(initializationFrames= 120,
-                                                 decisionThreshold=0.8)
+def subtractor(algorithm_type):
     if algorithm_type == 'GMG':
-        return cv2.bgsegm.createBackgroundSubtractorGMG(history=100, mixtures=5,
-                                                        backgroundRatio=0.7,
-                                                        noiseSigma=0)
-    if algorithm_type == 'CNT':
-        return cv2.bgsegm.createBackgroundSubtractorCNT(history=100, detectShadows=True,
-                                                        varThreshold=100)
+        return cv2.bgsegm.createBackgroundSubtractorGMG(initializationFrames = 120, 
+                                                        decisionThreshold=0.8)
     if algorithm_type == 'MOG':
-        return cv2.bgsegm.createBackgroundSubtractorMOG(history=500, dist2Threshold=400,
-                                                        detecShadows=True)
+        return cv2.bgsegm.createBackgroundSubtractorMOG(history = 100, nmixtures = 5,
+                                                        backgroundRatio = 0.7, 
+                                                        noiseSigma = 0)
     if algorithm_type == 'MOG2':
-        return cv2.createBackgroundSubtractorMOG2(minPixelStability=15,
-                                                  useHistory=True,
-                                                  maxPixelStability=15*60,
-                                                  isParallel=True)
-    
-    print("ERRO - Insira uma nova informação")
+        return cv2.createBackgroundSubtractorMOG2(history = 500, detectShadows=True,
+                                                varThreshold=100)
+    if algorithm_type == 'KNN':
+        return cv2.createBackgroundSubtractorKNN(history=500, dist2Threshold=400, 
+                                                 detectShadows=True)
+    if algorithm_type == 'CNT':
+        return cv2.bgsegm.createBackgroundSubtractorCNT(minPixelStability=15, 
+                                                        useHistory =True,
+                                                        maxPixelStability=15*60,
+                                                        isParallel=True)
+    print('Detector inválido')
     sys.exit(1)
+
 
 w_min = 50 # Largura minima do retângulo
 h_min = 50 # Altura minima do retângulo
@@ -102,7 +101,7 @@ def show_info(frame, mask):
     cv2.imshow("Detectar", mask)
 
 cap = cv2.VideoCapture(VIDEO_PATH)
-background_substractor = substractor(algorithm_type)
+background_substractor = subtractor(algorithm_type)
 
 e1 = cv2.getTickCount()
 
